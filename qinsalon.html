@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>質問用</title>
+  </head>
+  <body>
+    <p>JavaScriptの学習 / 非同期通信(非同期処理)1_1</p>
+    <!-- 下記に課題を書く -->
+
+    <br />
+    <button id="click-button2">クリックしたらテーブル作成</button>
+    <br />
+
+    <!-- <div class="box"> -->
+    <table border="1" id="table-box">
+      <tr>
+        <th class="table-box-item">順位</th>
+        <th class="table-box-item">画像</th>
+        <th class="table-box-item">商品名</th>
+        <th class="table-box-item">値段</th>
+        <th class="table-box-item">内容</th>
+      </tr>
+    </table>
+    <!-- </div> -->
+
+    <script>
+      let displayNumber = 10;
+      let getClickButton2 = document.getElementById("click-button2");
+      let getAllClickbutton = document.querySelectorAll("button");
+      let getTableBox = document.getElementById("table-box");
+      let trCreate = document.createElement("tr");
+      let getTd = document.getElementsByTagName("td");
+      let getTr = document.getElementsByTagName("td");
+      let clickCount = 0;
+      let length = 9;
+      let drinkRanking = new XMLHttpRequest();
+      drinkRanking.open(
+        "GET",
+        "https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&genreId=100316&applicationId=1010193044353139263",
+        true
+      );
+      drinkRanking.responseType = "json";
+      drinkRanking.send();
+      getClickButton2.addEventListener(
+        "click",
+        function () {
+          for (let i = 0; i <= length; i++) {
+            let newRow = getTableBox.insertRow();
+            let newCell = newRow.insertCell();
+            let text = document.createTextNode(
+              drinkRanking.response.Items[i].Item.rank
+            );
+            newCell.appendChild(text);
+            let tableCreate = (items) => {
+              newCell = newRow.insertCell();
+              text = document.createTextNode(items);
+              newCell.appendChild(text);
+            };
+            let imgCreate = (items) => {
+              newCell = newRow.insertCell();
+              let img = document.createElement("img");
+              img.src = "" + items;
+              newCell.appendChild(img);
+            };
+            imgCreate(
+              drinkRanking.response.Items[i].Item.mediumImageUrls[0].imageUrl
+            );
+            tableCreate(drinkRanking.response.Items[i].Item.itemName);
+            tableCreate(drinkRanking.response.Items[i].Item.itemPrice + " 円");
+            tableCreate(drinkRanking.response.Items[i].Item.catchcopy);
+          }
+        },
+        false
+      );
+    </script>
+    <!--//フォルダ名jsの中のtask_asynchronous_1_1.jsというファイルを読み込む-->
+  </body>
+</html>
